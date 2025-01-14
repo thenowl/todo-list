@@ -1,0 +1,164 @@
+/* 1. Use a more-intuitive box-sizing model */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+/* 2. Remove default margin */
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  /* 3. Add accessible line-height */
+  line-height: 1.5;
+  /* 4. Improve text rendering */
+  -webkit-font-smoothing: antialiased;
+}
+/* 5. Improve media defaults */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+/* 6. Inherit fonts for form controls */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+/* 7. Avoid text overflows */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+/* 8. Improve line wrapping */
+p {
+  text-wrap: pretty;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance;
+}
+
+/* ACTUAL CSS */
+
+:root {
+  --bg-color: #111;
+  --accent-color: #ffff00;
+  --text-color: whitesmoke;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: var(--text-color);
+  background: var(--bg-color);
+  height: 100vh;
+  width: 100vw;
+}
+
+.main-window {
+  display: flex;
+  flex-direction: column;
+
+  aspect-ratio: 16/9;
+  width: 100%;
+  max-width: 1200px;
+
+  border: 3px solid var(--accent-color);
+}
+
+header {
+  flex: 1;
+  display: flex;
+  align-items: center;
+
+  border-bottom: 1px solid var(--accent-color);
+  padding-left: 40px;
+}
+
+main {
+  flex: 9;
+  display: flex;
+}
+
+nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+  border-right: 1px solid var(--accent-color);
+  padding-left: 60px;
+}
+
+nav ul {
+  display: flex;
+  flex-direction: column;
+
+  height: 50%;
+  list-style: none;
+}
+
+nav ul:first-child {
+  justify-content: space-evenly;
+}
+
+nav p {
+  display: flex;
+  justify-content: space-between;
+}
+
+nav span {
+  position: relative;
+  margin-right: 40px;
+  cursor: pointer;
+}
+
+nav span:hover::before {
+  content: "Add project";
+  white-space: nowrap;
+
+  position: absolute;
+  top: -20px;
+  left: -40px;
+}
+
+.project-nav {
+  padding-top: 20px;
+  padding-left: 20px;
+  overflow-y: auto;
+}
+
+.nav-button-container {
+  display: flex;
+  justify-content: space-evenly;
+
+  margin-top: 10px;
+}
+
+.add-button,
+.cancel-button {
+  display: inline-block;
+  width: 33%;
+}
+
+.content {
+  flex: 5;
+}
