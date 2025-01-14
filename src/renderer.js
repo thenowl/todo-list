@@ -9,16 +9,26 @@ function pageInit() {
   populateProjectNav();
 }
 
-// LOAD PROJECTS IN NAV:
+// LOAD PROJECTS TO NAV ON PAGE (RE)LOAD:
 
 function populateProjectNav() {
   const projects = getProjectsContainer();
 
   for (const project in projects) {
     const projectNavElement = document.createElement("li");
+    projectNavElement.classList.add("project-nav-element");
     projectNavElement.id = toCamelCase(project);
-    projectNavElement.textContent = project;
     projectNav.appendChild(projectNavElement);
+
+    const projectName = document.createElement("p");
+    projectName.innerText = project;
+    projectNavElement.appendChild(projectName);
+
+    const optionsContainer = document.createElement("span");
+    optionsContainer.classList.add("options-container");
+    optionsContainer.innerHTML =
+      '<i class="fa-solid fa-ellipsis-vertical"></i>';
+    projectNavElement.appendChild(optionsContainer);
   }
 }
 
@@ -35,17 +45,22 @@ function addProjectMenu() {
   addProjectIsOpen = true;
 
   const projectNavElement = document.createElement("li");
+  projectNavElement.classList.add("project-nav-element");
   projectNav.appendChild(projectNavElement);
+
+  const inputContainer = document.createElement("div");
+  inputContainer.classList.add("input-container");
+  projectNavElement.appendChild(inputContainer);
 
   const projectNameInput = document.createElement("input");
   projectNameInput.classList.add("project-name-input");
   projectNameInput.placeholder = "Enter Project Name";
-  projectNavElement.appendChild(projectNameInput);
+  inputContainer.appendChild(projectNameInput);
   projectNameInput.focus();
 
   const navButtonContainer = document.createElement("div");
   navButtonContainer.classList.add("nav-button-container");
-  projectNavElement.appendChild(navButtonContainer);
+  inputContainer.appendChild(navButtonContainer);
 
   const addButton = document.createElement("button");
   addButton.classList.add("add-button");
@@ -60,7 +75,17 @@ function addProjectMenu() {
   function addProjectButton() {
     addProject(projectNameInput.value);
     projectNavElement.id = toCamelCase(projectNameInput.value);
-    projectNavElement.innerText = projectNameInput.value;
+    projectNavElement.innerText = "";
+
+    const projectName = document.createElement("p");
+    projectName.innerText = projectNameInput.value;
+    projectNavElement.appendChild(projectName);
+
+    const optionsContainer = document.createElement("span");
+    optionsContainer.classList.add("options-container");
+    optionsContainer.innerHTML =
+      '<i class="fa-solid fa-ellipsis-vertical"></i>';
+    projectNavElement.appendChild(optionsContainer);
     addProjectIsOpen = false;
   }
 
