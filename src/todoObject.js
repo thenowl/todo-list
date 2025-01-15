@@ -3,7 +3,6 @@ function createTodo(
   details,
   dueDate,
   priority = "none",
-  notes,
   todoStatus = "todo",
   project
 ) {

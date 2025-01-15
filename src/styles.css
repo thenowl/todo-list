@@ -58,6 +58,7 @@ h6 {
 
 :root {
   --bg-color: #111;
+  --light-bg-color: #666;
   --accent-color: #ffff00;
   --text-color: whitesmoke;
 }
@@ -151,18 +152,36 @@ nav > span:hover::before {
 .project-nav-element {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+
+  position: relative;
+  cursor: pointer;
 }
 
-.input-container {
+.input-container,
+.rename-project-container,
+.delete-project-container {
   padding-right: 20px;
 }
 
-.project-nav-element input {
+.delete-project-container {
+  flex: 1;
+}
+
+.delete-button-line-breaker {
+  flex-basis: 100%;
+  height: 0;
+}
+
+.project-nav-element input,
+.rename-project-input {
   width: 100%;
   padding: 4px 10px;
 }
 
-.nav-button-container {
+.nav-button-container,
+.rename-project-button-container,
+.delete-project-button-container {
   flex: 1;
   display: flex;
   justify-content: space-between;
@@ -173,14 +192,18 @@ nav > span:hover::before {
 }
 
 .add-button,
-.cancel-button {
+.cancel-button,
+.rename-button,
+.delete-button {
   display: inline-block;
   width: 50%;
   padding: 4px 10px;
   border-radius: 16px;
 }
 
-.add-button {
+.add-button,
+.rename-button,
+.delete-button {
   color: var(--text-color);
   background-color: red;
 }
@@ -190,14 +213,126 @@ nav > span:hover::before {
   background-color: green;
 }
 
+.verify-delete-container {
+  background: inherit;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.verify-delete-container h2,
+.verify-delete-container h3 {
+  color: red;
+  text-align: center;
+  white-space: nowrap;
+}
+
 .project-nav-element p {
   display: inline-block;
 }
 
 .options-container {
   display: inline-block;
+  position: relative;
+}
+
+.options-menu-list-container {
+  position: absolute;
+  /* top: -80px; */
+  left: -60px;
+
+  background: var(--light-bg-color);
+  padding: 2px 6px;
+  border: 1px solid var(--text-color);
+  z-index: 2;
+
+  display: none;
+}
+
+.options-menu-list-container li:first-child {
+  border-bottom: 1px solid var(--text-color);
+}
+
+.options-menu-list {
+  white-space: nowrap;
 }
 
 .content {
   flex: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.project-name-container {
+  padding: 30px 0 30px 40px;
+}
+
+.add-todo-container {
+  display: flex;
+  gap: 20px;
+
+  padding: 10px 0 10px 40px;
+  cursor: pointer;
+}
+
+.add-todo-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  padding: 10px 40px;
+}
+
+.add-todo-form > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.add-todo-form input,
+.add-todo-form textarea {
+  width: 75%;
+  padding: 5px 10px;
+}
+
+.add-todo-form textarea {
+  resize: none;
+}
+
+.priority-buttons-container {
+  display: flex;
+  gap: 20px;
+
+  width: 75%;
+}
+
+.low-priority-container,
+.medium-priority-container,
+.high-priority-container {
+  --button-color: whitesmoke;
+  color: var(--button-color);
+  border: 1px solid var(--button-color);
+  padding: 5px 20px;
+  cursor: pointer;
+}
+
+.low-priority-container {
+  --button-color: green;
+}
+
+.medium-priority-container {
+  --button-color: orange;
+}
+.high-priority-container {
+  --button-color: red;
+}
+
+.low-priority-container:hover,
+.medium-priority-container:hover,
+.high-priority-container:hover {
+  background: var(--button-color);
+  color: whitesmoke;
+  border-color: whitesmoke;
 }

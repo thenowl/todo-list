@@ -21,7 +21,17 @@ function addProject(title) {
     projectItems: {},
   };
   projectsContainer[title] = newProject;
+  localStorage.setItem("projectsContainer", JSON.stringify(projectsContainer));
+}
 
+function getProject(projectName) {
+  return projectsContainer[projectName];
+}
+
+function renameProject(oldTitle, newTitle) {
+  projectsContainer[oldTitle] = projectsContainer[newTitle];
+  projectsContainer[newTitle] = newTitle;
+  delete projectsContainer[oldTitle];
   localStorage.setItem("projectsContainer", JSON.stringify(projectsContainer));
 }
 
@@ -46,6 +56,8 @@ export {
   getProjectsContainer,
   initProjects,
   addProject,
+  getProject,
+  renameProject,
   deleteProject,
   addTodo,
   deleteTodo,
