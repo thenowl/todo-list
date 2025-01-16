@@ -1,5 +1,3 @@
-import { createTodo } from "./todoObject";
-
 let projectsContainer = {};
 
 function initProjects() {
@@ -29,9 +27,15 @@ function getProject(projectName) {
 }
 
 function renameProject(oldTitle, newTitle) {
-  projectsContainer[oldTitle] = projectsContainer[newTitle];
-  projectsContainer[newTitle] = newTitle;
-  delete projectsContainer[oldTitle];
+  if (oldTitle !== newTitle) {
+    Object.defineProperty(
+      projectsContainer,
+      newTitle,
+      Object.getOwnPropertyDescriptor(projectsContainer, oldTitle)
+    );
+    delete projectsContainer[oldTitle];
+  }
+  projectsContainer[newTitle].title = newTitle;
   localStorage.setItem("projectsContainer", JSON.stringify(projectsContainer));
 }
 
@@ -40,12 +44,37 @@ function deleteProject(project) {
   localStorage.setItem("projectsContainer", JSON.stringify(projectsContainer));
 }
 
-function addTodo(project, todoObject) {
-  project[todoObject.title] = todoObject;
+function createTodo(
+  title,
+  description,
+  dueDate,
+  priority,
+  todoStatus = "todo",
+  project
+) {
+  return { title, description, dueDate, priority, todoStatus, project };
 }
 
-function deleteTodo(project, todoObject) {
-  delete project[todoObject];
+function addTodoToProject(project, todoObject) {
+  projectsContainer[project].projectItems[todoObject.title] = todoObject;
+  console.log(projectsContainer[project]);
+  localStorage.setItem("projectsContainer", JSON.stringify(projectsContainer));
+}
+
+function deleteTodoFromProject(project, todoObject) {
+  delete projectsContainer[project].projectItems[todoObject];
+  localStorage.setItem("projectsContainer", JSON.stringify(projectsContainer));
+}
+
+function changeTodoStatus(project, todo) {
+  const currentStatus =
+    projectsContainer[project].projectItems[todo].todoStatus;
+  if (currentStatus == "todo") {
+    projectsContainer[project].projectItems[todo].todoStatus = "done";
+  } else {
+    projectsContainer[project].projectItems[todo].todoStatus = "todo";
+  }
+  localStorage.setItem("projectsContainer", JSON.stringify(projectsContainer));
 }
 
 function getTodos(project) {
@@ -59,7 +88,9 @@ export {
   getProject,
   renameProject,
   deleteProject,
-  addTodo,
-  deleteTodo,
+  createTodo,
+  addTodoToProject,
+  deleteTodoFromProject,
+  changeTodoStatus,
   getTodos,
 };

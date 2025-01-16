@@ -1,9 +1,4 @@
-import {
-  getProject,
-  addProject,
-  renameProject,
-  deleteProject,
-} from "./projects";
+import { addProject, renameProject, deleteProject } from "./projects";
 import { renderProjectContent } from "./renderContent";
 
 const projectNav = document.querySelector("#projectNav");
@@ -153,6 +148,7 @@ function renderAddProject(projName) {
       projectNavElement.appendChild(optionsContainer);
       editProjectIsOpen = false;
       optionsMenuListContainer.style.cssText = "display: none;";
+      renderProjectContent(renameProjectInput.value);
     });
 
     cancelButton.addEventListener("click", () => {
