@@ -8,9 +8,9 @@ const projectNav = document.querySelector("#projectNav");
 const addProjectToNav = document.querySelector("#addProject");
 let addProjectIsOpen = false;
 
-addProjectToNav.addEventListener("click", addProjectMenu);
+addProjectToNav.addEventListener("click", renderAddProjectMenu);
 
-function addProjectMenu() {
+function renderAddProjectMenu() {
   if (addProjectIsOpen) return;
 
   addProjectIsOpen = true;
@@ -41,7 +41,8 @@ function addProjectMenu() {
 
   function addProjectButton() {
     addProject(projectNameInput.value);
-    renderAddProject(projectNameInput.value);
+    renderProject(projectNameInput.value);
+    renderProjectContent(projectNameInput.value);
     projectNav.removeChild(inputContainer);
 
     addProjectIsOpen = false;
@@ -52,13 +53,13 @@ function addProjectMenu() {
     addProjectIsOpen = false;
   }
 
-  // ADD/CANCEL PROJECT EVENT LISTENERS:
+  // ADD/CANCEL ADD PROJECT EVENT LISTENERS:
 
   addButton.addEventListener("click", addProjectButton);
   cancelButton.addEventListener("click", cancelProjectButton);
 }
 
-function renderAddProject(projName) {
+function renderProject(projName) {
   const projectNavElement = document.createElement("li");
   projectNavElement.classList.add("project-nav-element");
   projectNavElement.innerText = "";
@@ -68,49 +69,27 @@ function renderAddProject(projName) {
   projectName.innerText = projName;
   projectNavElement.appendChild(projectName);
 
-  const optionsContainer = document.createElement("span");
-  optionsContainer.classList.add("options-container");
-  optionsContainer.innerHTML = '<i class="fa-solid fa-ellipsis-vertical"></i>';
-  projectNavElement.appendChild(optionsContainer);
-
   projectName.addEventListener("click", () => {
     renderProjectContent(projectName.innerText);
   });
 
-  // PROJECT OPTIONS MENU:
+  const optionsContainer = document.createElement("div");
+  optionsContainer.classList.add("project-options-container");
+  projectNavElement.appendChild(optionsContainer);
 
-  const optionsMenuListContainer = document.createElement("div");
-  optionsMenuListContainer.classList.add("options-menu-list-container");
-  optionsContainer.appendChild(optionsMenuListContainer);
+  const editProjectNameSymbol = document.createElement("span");
+  editProjectNameSymbol.classList.add("edit-project-name-symbol");
+  editProjectNameSymbol.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
+  optionsContainer.appendChild(editProjectNameSymbol);
 
-  const optionsMenuList = document.createElement("ul");
-  optionsMenuList.classList.add("options-menu-list");
-  optionsMenuListContainer.appendChild(optionsMenuList);
-
-  const renameProjectOption = document.createElement("li");
-  renameProjectOption.innerText = "Rename";
-  optionsMenuList.appendChild(renameProjectOption);
-
-  const deleteProjectOption = document.createElement("li");
-  deleteProjectOption.innerText = "Delete";
-  optionsMenuList.appendChild(deleteProjectOption);
-
-  let editProjectIsOpen = false;
-
-  optionsContainer.addEventListener("click", () => {
-    if (editProjectIsOpen) {
-      editProjectIsOpen = false;
-      optionsMenuListContainer.style.cssText = "display: none;";
-      return;
-    }
-
-    editProjectIsOpen = true;
-    optionsMenuListContainer.style.cssText = "display: block;";
-  });
+  const deleteProjectSymbol = document.createElement("span");
+  deleteProjectSymbol.classList.add("delete-project-symbol");
+  deleteProjectSymbol.innerHTML = '<i class="fa-solid fa-trash"></i>';
+  optionsContainer.appendChild(deleteProjectSymbol);
 
   // EDIT PROJECT NAME:
 
-  renameProjectOption.addEventListener("click", () => {
+  editProjectNameSymbol.addEventListener("click", () => {
     projectNavElement.removeChild(projectName);
     projectNavElement.removeChild(optionsContainer);
 
@@ -146,8 +125,6 @@ function renderAddProject(projName) {
       renameProject(projName, renameProjectInput.value);
       projectNavElement.appendChild(projectName);
       projectNavElement.appendChild(optionsContainer);
-      editProjectIsOpen = false;
-      optionsMenuListContainer.style.cssText = "display: none;";
       renderProjectContent(renameProjectInput.value);
     });
 
@@ -155,14 +132,12 @@ function renderAddProject(projName) {
       projectNavElement.removeChild(renameProjectContainer);
       projectNavElement.appendChild(projectName);
       projectNavElement.appendChild(optionsContainer);
-      editProjectIsOpen = false;
-      optionsMenuListContainer.style.cssText = "display: none;";
     });
   });
 
   // DELETE PROJECT:
 
-  deleteProjectOption.addEventListener("click", () => {
+  deleteProjectSymbol.addEventListener("click", () => {
     projectNavElement.removeChild(optionsContainer);
     const deleteButtonLineBreaker = document.createElement("div");
     deleteButtonLineBreaker.classList.add("delete-button-line-breaker");
@@ -208,7 +183,7 @@ function renderAddProject(projName) {
       verifyDeleteContainer.appendChild(warningAddOn);
 
       const verifyDeleteProjectButtonContainer = document.createElement("div");
-      deleteProjectButtonContainer.classList.add(
+      verifyDeleteProjectButtonContainer.classList.add(
         "delete-project-button-container"
       );
       verifyDeleteContainer.appendChild(verifyDeleteProjectButtonContainer);
@@ -247,4 +222,4 @@ function renderAddProject(projName) {
   });
 }
 
-export { renderAddProject };
+export { renderProject };

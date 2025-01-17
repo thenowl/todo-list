@@ -55,9 +55,22 @@ function createTodo(
   return { title, description, dueDate, priority, todoStatus, project };
 }
 
+function editTodo(oldTodoTitle, newTodoTitle, project, editedTodo) {
+  let todo = projectsContainer[project].projectItems;
+  if (oldTodoTitle !== newTodoTitle) {
+    Object.defineProperty(
+      todo,
+      newTodoTitle,
+      Object.getOwnPropertyDescriptor(todo, oldTodoTitle)
+    );
+    delete todo[oldTodoTitle];
+  }
+  todo[newTodoTitle] = editedTodo;
+  localStorage.setItem("projectsContainer", JSON.stringify(projectsContainer));
+}
+
 function addTodoToProject(project, todoObject) {
   projectsContainer[project].projectItems[todoObject.title] = todoObject;
-  console.log(projectsContainer[project]);
   localStorage.setItem("projectsContainer", JSON.stringify(projectsContainer));
 }
 
@@ -89,6 +102,7 @@ export {
   renameProject,
   deleteProject,
   createTodo,
+  editTodo,
   addTodoToProject,
   deleteTodoFromProject,
   changeTodoStatus,
