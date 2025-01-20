@@ -280,7 +280,26 @@ nav > span:hover::before {
 }
 
 .project-name-container {
-  padding: 30px 0 30px 40px;
+  display: flex;
+  justify-content: space-between;
+  padding: 30px 40px;
+}
+
+.sort-container {
+  display: flex;
+  gap: 20px;
+}
+
+.sort-by-name,
+.sort-by-priority,
+.sort-by-date {
+  position: relative;
+  cursor: pointer;
+}
+
+.selected-sort {
+  text-decoration: underline;
+  scale: 1.2;
 }
 
 .add-todo-container,
@@ -341,13 +360,21 @@ nav > span:hover::before {
   width: 75%;
 }
 
+.no-priority-button,
 .low-priority-button,
 .medium-priority-button,
 .high-priority-button {
-  --button-color: var(--text-color);
-  color: var(--button-color);
+  --button-color: transparent;
   border: 1px solid var(--button-color);
+  width: 100%;
   padding: 5px 20px;
+}
+
+.low-priority-button,
+.medium-priority-button,
+.high-priority-button {
+  --button-color: transparent;
+  color: var(--button-color);
   cursor: pointer;
 }
 
@@ -371,6 +398,20 @@ nav > span:hover::before {
   background: var(--button-color);
   color: var(--text-color);
   border-color: var(--text-color);
+}
+
+.done {
+  user-select: none;
+}
+
+.right-side-todo-container > .priority {
+  cursor: default;
+}
+
+.done > .right-side-todo-container > .priority:hover {
+  background-color: inherit;
+  color: var(--button-color);
+  border: 1px solid var(--button-color);
 }
 
 .content-container {

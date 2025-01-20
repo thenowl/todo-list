@@ -1,7 +1,40 @@
 let projectsContainer = {};
 
 function initProjects() {
+  addProject("_home");
+  addProject("_today");
+  addProject("_week");
+  addProject("_month");
   addProject("Starter Project");
+}
+
+function allTodos() {
+  for (const project of Object.keys(projectsContainer)) {
+    if (
+      project == "_home" ||
+      project == "_today" ||
+      project == "_week" ||
+      project == "_month"
+    ) {
+      continue;
+    }
+
+    for (const todo of Object.entries(
+      projectsContainer[project].projectItems
+    )) {
+      projectsContainer["_home"].projectItems[todo[1].title] = todo[1];
+    }
+  }
+  localStorage.setItem("projectsContainer", JSON.stringify(projectsContainer));
+}
+
+function todaysTodos() {
+  allTodos();
+  for (const todo of Object.entries(projectsContainer["_home"].projectItems)) {
+    if (todo[1].dueDate == new Date().toISOString().split("T")[0]) {
+      projectsContainer["_today"].projectItems[todo[1].title] = todo[1];
+    }
+  }
 }
 
 function getProjectsContainer() {
@@ -17,6 +50,7 @@ function addProject(title) {
   const newProject = {
     title: title,
     projectItems: {},
+    sortBy: "none",
   };
   projectsContainer[title] = newProject;
   localStorage.setItem("projectsContainer", JSON.stringify(projectsContainer));
@@ -90,13 +124,21 @@ function changeTodoStatus(project, todo) {
   localStorage.setItem("projectsContainer", JSON.stringify(projectsContainer));
 }
 
+function updateTodoList(project, updatedList, sortBy) {
+  projectsContainer[project].projectItems = updatedList;
+  projectsContainer[project].sortBy = sortBy;
+  localStorage.setItem("projectsContainer", JSON.stringify(projectsContainer));
+}
+
 function getTodos(project) {
   return project.projectItems;
 }
 
 export {
-  getProjectsContainer,
   initProjects,
+  allTodos,
+  todaysTodos,
+  getProjectsContainer,
   addProject,
   getProject,
   renameProject,
@@ -106,5 +148,6 @@ export {
   addTodoToProject,
   deleteTodoFromProject,
   changeTodoStatus,
+  updateTodoList,
   getTodos,
 };

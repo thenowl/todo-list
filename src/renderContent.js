@@ -7,6 +7,11 @@ import {
   changeTodoStatus,
   deleteTodoFromProject,
 } from "./projects";
+import {
+  sortByAlphabet,
+  sortByPriority,
+  sortByDueDate,
+} from "./sortingFunctions";
 
 let createTodoIsOpen = false;
 let editTodoIsOpen = false;
@@ -17,8 +22,6 @@ function renderProjectContent(projName) {
   const content = document.querySelector("#content");
   content.innerText = "";
 
-  console.log(projName);
-
   const projectNameContainer = document.createElement("div");
   projectNameContainer.classList.add("project-name-container");
   content.appendChild(projectNameContainer);
@@ -26,6 +29,58 @@ function renderProjectContent(projName) {
   const projectName = document.createElement("h2");
   projectName.textContent = projName;
   projectNameContainer.appendChild(projectName);
+
+  const sortContainer = document.createElement("div");
+  sortContainer.classList.add("sort-container");
+  projectNameContainer.appendChild(sortContainer);
+
+  const sortInstruction = document.createElement("h3");
+  sortInstruction.classList.add("sort-instruction");
+  sortInstruction.innerText = "Sort by:";
+  sortContainer.appendChild(sortInstruction);
+
+  const sortByName = document.createElement("h3");
+  sortByName.classList.add("sort-by-name");
+  sortByName.innerText = "Name";
+  sortContainer.appendChild(sortByName);
+
+  const sortByPrio = document.createElement("h3");
+  sortByPrio.classList.add("sort-by-priority");
+  sortByPrio.innerText = "Priority";
+  sortContainer.appendChild(sortByPrio);
+
+  const sortByDate = document.createElement("h3");
+  sortByDate.classList.add("sort-by-date");
+  sortByDate.innerText = "Date";
+  sortContainer.appendChild(sortByDate);
+
+  if (getProject(projName).sortBy == "alphabet") {
+    sortByName.classList.add("selected-sort");
+  }
+  if (getProject(projName).sortBy == "priority") {
+    sortByPrio.classList.add("selected-sort");
+  }
+  if (getProject(projName).sortBy == "dueDate") {
+    sortByDate.classList.add("selected-sort");
+  }
+
+  sortByName.addEventListener("click", () => {
+    const thisProject = getProject(projName);
+    sortByAlphabet(thisProject);
+    renderProjectContent(projName);
+  });
+
+  sortByPrio.addEventListener("click", () => {
+    const thisProject = getProject(projName);
+    sortByPriority(thisProject);
+    renderProjectContent(projName);
+  });
+
+  sortByDate.addEventListener("click", () => {
+    const thisProject = getProject(projName);
+    sortByDueDate(thisProject);
+    renderProjectContent(projName);
+  });
 
   const addTodoContainer = document.createElement("div");
   addTodoContainer.classList.add("add-todo-container");
@@ -304,7 +359,9 @@ function renderTodo(projectName, todo) {
   priority.classList.add("priority");
   rightSideTodoContainer.appendChild(priority);
 
-  if (todo.priority == 1) {
+  if (todo.priority == 0) {
+    priority.classList.add("no-priority-button");
+  } else if (todo.priority == 1) {
     priority.classList.add("low-priority-button");
     priority.textContent = "Low";
   } else if (todo.priority == 2) {

@@ -1,4 +1,10 @@
-import { addProject, renameProject, deleteProject } from "./projects";
+import {
+  allTodos,
+  todaysTodos,
+  addProject,
+  renameProject,
+  deleteProject,
+} from "./projects";
 import { renderProjectContent } from "./renderContent";
 
 const projectNav = document.querySelector("#projectNav");
@@ -60,6 +66,14 @@ function renderAddProjectMenu() {
 }
 
 function renderProject(projName) {
+  if (
+    projName == "_home" ||
+    projName == "_today" ||
+    projName == "_week" ||
+    projName == "_month"
+  ) {
+    return;
+  }
   const projectNavElement = document.createElement("li");
   projectNavElement.classList.add("project-nav-element");
   projectNavElement.innerText = "";
@@ -221,5 +235,19 @@ function renderProject(projName) {
     });
   });
 }
+
+const home = document.querySelector("#home");
+
+home.addEventListener("click", () => {
+  allTodos();
+  renderProjectContent("_home");
+});
+
+const today = document.querySelector("#today");
+
+today.addEventListener("click", () => {
+  todaysTodos();
+  renderProjectContent("_today");
+});
 
 export { renderProject };
