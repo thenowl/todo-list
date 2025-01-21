@@ -19,6 +19,8 @@ import {
 } from "./sortingFunctions";
 import { toCamelCase } from "./utilities";
 
+let createTodoIsOpen = false;
+
 // CONTENT RENDERER TO CALL ALL THE FUNCTIONS:
 
 function renderProjectContent(projName) {
@@ -102,8 +104,6 @@ function renderProjectContent(projName) {
   const createTodoContainer = document.createElement("div");
   createTodoContainer.classList.add("create-todo-container");
   content.appendChild(createTodoContainer);
-
-  let createTodoIsOpen = false;
 
   addTodoContainer.addEventListener("click", () => {
     if (createTodoIsOpen) {
@@ -754,6 +754,7 @@ function renderTodo(projectName, todo) {
       editTodoIsOpen = false;
       todoContainer.style.height = "4rem";
       description.classList.add("description-is-closed");
+      titleDescriptionContainer.style.cursor = "pointer";
       if (projectName == "_home") allTodos();
       if (projectName == "_today") todaysTodos();
       if (projectName == "_week") thisWeeksTodos();
@@ -766,6 +767,7 @@ function renderTodo(projectName, todo) {
       editTodoFormContainer.textContent = "";
       todoContainer.style.height = "4rem";
       description.classList.add("description-is-closed");
+      titleDescriptionContainer.style.cursor = "pointer";
       editTodoIsOpen = false;
     });
   }
@@ -776,12 +778,14 @@ function renderTodo(projectName, todo) {
       editTodoIsOpen = false;
       todoContainer.style.height = "4rem";
       description.classList.add("description-is-closed");
+      titleDescriptionContainer.style.cursor = "pointer";
       return;
     }
 
     editTodoIsOpen = true;
     todoContainer.style.height = "fit-content";
     description.classList.add("description-is-closed");
+    titleDescriptionContainer.style.cursor = "default";
     editTodoForm();
   });
 

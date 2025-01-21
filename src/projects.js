@@ -14,6 +14,17 @@ function initProjects() {
   addProject("_week");
   addProject("_month");
   addProject("Starter Project");
+  addTodoToProject(
+    "Starter Project",
+    createTodo(
+      "Example Todo",
+      "Click me to reveal the rest of my content.\nAs you can see, you can unfold Todos to show longer descriptions.",
+      new Date().toISOString().split("T")[0],
+      2,
+      "todo",
+      "Starter Project"
+    )
+  );
 }
 
 function allTodos() {
