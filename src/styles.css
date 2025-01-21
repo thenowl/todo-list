@@ -346,6 +346,16 @@ nav > span:hover::before {
   resize: none;
 }
 
+.add-todo-project-container {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.add-todo-project-container select {
+  width: 25%;
+  padding: 5px 20px;
+}
+
 .add-todo-form > .add-todo-button-container {
   align-self: flex-end;
   display: flex;
@@ -365,6 +375,7 @@ nav > span:hover::before {
 .medium-priority-button,
 .high-priority-button {
   --button-color: transparent;
+  text-align: center;
   border: 1px solid var(--button-color);
   width: 100%;
   padding: 5px 20px;
@@ -427,6 +438,7 @@ nav > span:hover::before {
 
 .todo-content-container {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 20px;
   padding: 10px 20px;
@@ -439,7 +451,13 @@ nav > span:hover::before {
 }
 
 .title-description-container {
-  width: 50%;
+  width: 30%;
+}
+
+.todo-project-container {
+  display: flex;
+  gap: 10px;
+  width: 20%;
 }
 
 .todo-container > .selected {

@@ -1,5 +1,10 @@
 import { format } from "date-fns";
 import {
+  allTodos,
+  todaysTodos,
+  thisWeeksTodos,
+  thisMonthsTodos,
+  getProjectsContainer,
   getProject,
   createTodo,
   editTodo,
@@ -12,6 +17,7 @@ import {
   sortByPriority,
   sortByDueDate,
 } from "./sortingFunctions";
+import { toCamelCase } from "./utilities";
 
 let createTodoIsOpen = false;
 let editTodoIsOpen = false;
@@ -216,6 +222,53 @@ function renderCreateTodo(projName) {
   highPriorityButton.textContent = "High";
   priorityButtonsContainer.appendChild(highPriorityButton);
 
+  const projectContainer = document.createElement("div");
+  projectContainer.classList.add("add-todo-project-container");
+  addTodoForm.appendChild(projectContainer);
+
+  const projectLabel = document.createElement("label");
+  projectLabel.setAttribute("for", "addTodoProjectSelector");
+  projectLabel.classList.add("project-label");
+  projectLabel.textContent = "Project:";
+  projectContainer.appendChild(projectLabel);
+
+  const projectSelection = document.createElement("select");
+  projectSelection.name = "project";
+  projectSelection.id = "addTodoProjectSelector";
+  projectContainer.appendChild(projectSelection);
+
+  for (const project of Object.keys(getProjectsContainer())) {
+    if (
+      project == "_home" ||
+      project == "_today" ||
+      project == "_week" ||
+      project == "_month"
+    ) {
+      continue;
+    }
+    const projectId = toCamelCase(project);
+    const projectOption = document.createElement("option");
+    projectOption.id = projectId;
+    projectOption.value = project;
+    projectOption.innerText = project;
+    projectSelection.appendChild(projectOption);
+
+    if (projName == project) {
+      projectOption.selected = true;
+    }
+  }
+
+  if (
+    projName == "_home" ||
+    projName == "_today" ||
+    projName == "_week" ||
+    projName == "_month"
+  ) {
+    projectSelection.disabled = false;
+  } else {
+    projectSelection.disabled = true;
+  }
+
   const addTodoButtonContainer = document.createElement("div");
   addTodoButtonContainer.classList.add("add-todo-button-container");
   addTodoForm.appendChild(addTodoButtonContainer);
@@ -297,9 +350,13 @@ function renderCreateTodo(projName) {
       dueDateInput.value,
       selectedPriority,
       "todo",
-      projName
+      projectSelection.value
     );
-    addTodoToProject(projName, newTodo);
+    addTodoToProject(projectSelection.value, newTodo);
+    if (projectName == "_home") allTodos();
+    if (projectName == "_today") todaysTodos();
+    if (projectName == "_week") thisWeeksTodos();
+    if (projectName == "_month") thisMonthsTodos();
     renderProjectContent(projName);
   }
 
@@ -344,6 +401,25 @@ function renderTodo(projectName, todo) {
   description.classList.add("description-text");
   description.innerText = todo.description;
   descriptionContainer.appendChild(description);
+
+  const todoProjectContainer = document.createElement("div");
+  todoProjectContainer.classList.add("todo-project-container");
+  todoContentContainer.appendChild(todoProjectContainer);
+
+  if (
+    projectName == "_home" ||
+    projectName == "_today" ||
+    projectName == "_week" ||
+    projectName == "_month"
+  ) {
+    const projectDescriptor = document.createElement("p");
+    projectDescriptor.innerText = "Project:";
+    todoProjectContainer.appendChild(projectDescriptor);
+
+    const projectName = document.createElement("p");
+    projectName.innerText = todo.project;
+    todoProjectContainer.appendChild(projectName);
+  }
 
   const rightSideTodoContainer = document.createElement("div");
   rightSideTodoContainer.classList.add("right-side-todo-container");
@@ -499,6 +575,42 @@ function renderTodo(projectName, todo) {
     highPriorityButton.textContent = "High";
     priorityButtonsContainer.appendChild(highPriorityButton);
 
+    const projectContainer = document.createElement("div");
+    projectContainer.classList.add("add-todo-project-container");
+    editTodoForm.appendChild(projectContainer);
+
+    const projectLabel = document.createElement("label");
+    projectLabel.setAttribute("for", "addTodoProjectSelector");
+    projectLabel.classList.add("project-label");
+    projectLabel.textContent = "Project:";
+    projectContainer.appendChild(projectLabel);
+
+    const projectSelection = document.createElement("select");
+    projectSelection.name = "project";
+    projectSelection.id = "addTodoProjectSelector";
+    projectContainer.appendChild(projectSelection);
+
+    for (const project of Object.keys(getProjectsContainer())) {
+      if (
+        project == "_home" ||
+        project == "_today" ||
+        project == "_week" ||
+        project == "_month"
+      ) {
+        continue;
+      }
+      const projectId = toCamelCase(project);
+      const projectOption = document.createElement("option");
+      projectOption.id = projectId;
+      projectOption.value = project;
+      projectOption.innerText = project;
+      projectSelection.appendChild(projectOption);
+
+      if (todo.project == project) {
+        projectOption.selected = true;
+      }
+    }
+
     const editTodoButtonContainer = document.createElement("div");
     editTodoButtonContainer.classList.add("edit-todo-button-container");
     editTodoForm.appendChild(editTodoButtonContainer);
@@ -612,10 +724,20 @@ function renderTodo(projectName, todo) {
         dueDateInput.value,
         selectedPriority,
         todo.todoStatus,
-        projectName
+        projectSelection.value
       );
-      editTodo(todo.title, titleInput.value, projectName, editedTodo);
+      editTodo(
+        todo.title,
+        titleInput.value,
+        todo.project,
+        projectSelection.value,
+        editedTodo
+      );
       editTodoIsOpen = false;
+      if (projectName == "_home") allTodos();
+      if (projectName == "_today") todaysTodos();
+      if (projectName == "_week") thisWeeksTodos();
+      if (projectName == "_month") thisMonthsTodos();
       renderProjectContent(projectName);
     }
 

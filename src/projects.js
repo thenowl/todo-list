@@ -1,3 +1,11 @@
+import {
+  startOfWeek,
+  endOfWeek,
+  formatISO,
+  startOfMonth,
+  endOfMonth,
+} from "date-fns";
+
 let projectsContainer = {};
 
 function initProjects() {
@@ -9,6 +17,7 @@ function initProjects() {
 }
 
 function allTodos() {
+  projectsContainer["_home"].projectItems = {};
   for (const project of Object.keys(projectsContainer)) {
     if (
       project == "_home" ||
@@ -29,12 +38,92 @@ function allTodos() {
 }
 
 function todaysTodos() {
-  allTodos();
-  for (const todo of Object.entries(projectsContainer["_home"].projectItems)) {
-    if (todo[1].dueDate == new Date().toISOString().split("T")[0]) {
-      projectsContainer["_today"].projectItems[todo[1].title] = todo[1];
+  projectsContainer["_today"].projectItems = {};
+  for (const project of Object.keys(projectsContainer)) {
+    if (
+      project == "_home" ||
+      project == "_today" ||
+      project == "_week" ||
+      project == "_month"
+    ) {
+      continue;
+    }
+    for (const todo of Object.entries(
+      projectsContainer[project].projectItems
+    )) {
+      if (todo[1].dueDate == new Date().toISOString().split("T")[0]) {
+        projectsContainer["_today"].projectItems[todo[1].title] = todo[1];
+      }
     }
   }
+  localStorage.setItem("projectsContainer", JSON.stringify(projectsContainer));
+}
+
+function thisWeeksTodos() {
+  projectsContainer["_week"].projectItems = {};
+  for (const project of Object.keys(projectsContainer)) {
+    if (
+      project == "_home" ||
+      project == "_today" ||
+      project == "_week" ||
+      project == "_month"
+    ) {
+      continue;
+    }
+
+    const today = new Date();
+    const firstDayOfWeek = formatISO(startOfWeek(today, { weekStartsOn: 1 }), {
+      representation: "date",
+    });
+    const lastDayOfWeek = formatISO(endOfWeek(today, { weekStartsOn: 1 }), {
+      representation: "date",
+    });
+    for (const todo of Object.entries(
+      projectsContainer[project].projectItems
+    )) {
+      if (
+        todo[1].dueDate >= firstDayOfWeek &&
+        todo[1].dueDate <= lastDayOfWeek
+      ) {
+        projectsContainer["_week"].projectItems[todo[1].title] = todo[1];
+      }
+    }
+  }
+  localStorage.setItem("projectsContainer", JSON.stringify(projectsContainer));
+}
+
+function thisMonthsTodos() {
+  console.log("yay");
+  projectsContainer["_month"].projectItems = {};
+  for (const project of Object.keys(projectsContainer)) {
+    if (
+      project == "_home" ||
+      project == "_today" ||
+      project == "_week" ||
+      project == "_month"
+    ) {
+      continue;
+    }
+
+    const today = new Date();
+    const firstDayOfMonth = formatISO(startOfMonth(today), {
+      representation: "date",
+    });
+    const lastDayOfMonth = formatISO(endOfMonth(today), {
+      representation: "date",
+    });
+    for (const todo of Object.entries(
+      projectsContainer[project].projectItems
+    )) {
+      if (
+        todo[1].dueDate >= firstDayOfMonth &&
+        todo[1].dueDate <= lastDayOfMonth
+      ) {
+        projectsContainer["_month"].projectItems[todo[1].title] = todo[1];
+      }
+    }
+  }
+  localStorage.setItem("projectsContainer", JSON.stringify(projectsContainer));
 }
 
 function getProjectsContainer() {
@@ -89,8 +178,14 @@ function createTodo(
   return { title, description, dueDate, priority, todoStatus, project };
 }
 
-function editTodo(oldTodoTitle, newTodoTitle, project, editedTodo) {
-  let todo = projectsContainer[project].projectItems;
+function editTodo(
+  oldTodoTitle,
+  newTodoTitle,
+  oldProject,
+  newProject,
+  editedTodo
+) {
+  let todo = projectsContainer[oldProject].projectItems;
   if (oldTodoTitle !== newTodoTitle) {
     Object.defineProperty(
       todo,
@@ -99,7 +194,12 @@ function editTodo(oldTodoTitle, newTodoTitle, project, editedTodo) {
     );
     delete todo[oldTodoTitle];
   }
-  todo[newTodoTitle] = editedTodo;
+  if (oldProject == newProject) {
+    todo[newTodoTitle] = editedTodo;
+  } else {
+    delete todo[oldTodoTitle];
+    projectsContainer[newProject].projectItems[newTodoTitle] = editedTodo;
+  }
   localStorage.setItem("projectsContainer", JSON.stringify(projectsContainer));
 }
 
@@ -138,6 +238,8 @@ export {
   initProjects,
   allTodos,
   todaysTodos,
+  thisWeeksTodos,
+  thisMonthsTodos,
   getProjectsContainer,
   addProject,
   getProject,

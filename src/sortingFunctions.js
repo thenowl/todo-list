@@ -1,4 +1,4 @@
-import { getProjectsContainer, getProject, updateTodoList } from "./projects";
+import { updateTodoList } from "./projects";
 
 function sortByAlphabet(obj) {
   let projectTodos = obj.projectItems;

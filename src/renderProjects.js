@@ -1,6 +1,8 @@
 import {
   allTodos,
   todaysTodos,
+  thisWeeksTodos,
+  thisMonthsTodos,
   addProject,
   renameProject,
   deleteProject,
@@ -46,6 +48,34 @@ function renderAddProjectMenu() {
   navButtonContainer.appendChild(cancelButton);
 
   function addProjectButton() {
+    if (!projectNameInput.value) {
+      const titleRequestContainer = document.createElement("dialog");
+      titleRequestContainer.classList.add("title-request-container");
+      inputContainer.appendChild(titleRequestContainer);
+      titleRequestContainer.showModal();
+
+      const warning = document.createElement("h2");
+      warning.classList.add("warning-message");
+      warning.innerText = "Please enter a title for your project";
+      titleRequestContainer.appendChild(warning);
+
+      const titleRequestButtonContainer = document.createElement("div");
+      titleRequestButtonContainer.classList.add(
+        "title-request-button-container"
+      );
+      titleRequestContainer.appendChild(titleRequestButtonContainer);
+
+      const titleRequestButton = document.createElement("button");
+      titleRequestButton.classList.add("ok-button");
+      titleRequestButton.type = "button";
+      titleRequestButton.innerText = "OK";
+      titleRequestButtonContainer.appendChild(titleRequestButton);
+
+      titleRequestButton.addEventListener("click", () => {
+        titleRequestContainer.close();
+      });
+      return;
+    }
     addProject(projectNameInput.value);
     renderProject(projectNameInput.value);
     renderProjectContent(projectNameInput.value);
@@ -248,6 +278,20 @@ const today = document.querySelector("#today");
 today.addEventListener("click", () => {
   todaysTodos();
   renderProjectContent("_today");
+});
+
+const week = document.querySelector("#week");
+
+week.addEventListener("click", () => {
+  thisWeeksTodos();
+  renderProjectContent("_week");
+});
+
+const month = document.querySelector("#month");
+
+month.addEventListener("click", () => {
+  thisMonthsTodos();
+  renderProjectContent("_month");
 });
 
 export { renderProject };
