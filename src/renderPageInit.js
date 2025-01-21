@@ -1,5 +1,6 @@
-import { getProjectsContainer } from "./projects";
+import { getProjectsContainer, allTodos } from "./projects";
 import { renderProject } from "./renderProjects";
+import { renderProjectContent } from "./renderContent";
 
 // INITIALIZE PAGE:
 
@@ -9,6 +10,8 @@ function pageInit() {
   for (const project in projects) {
     renderProject(project);
   }
+  allTodos();
+  renderProjectContent("_home");
 }
 
 export { pageInit };

@@ -19,9 +19,6 @@ import {
 } from "./sortingFunctions";
 import { toCamelCase } from "./utilities";
 
-let createTodoIsOpen = false;
-let editTodoIsOpen = false;
-
 // CONTENT RENDERER TO CALL ALL THE FUNCTIONS:
 
 function renderProjectContent(projName) {
@@ -105,6 +102,8 @@ function renderProjectContent(projName) {
   const createTodoContainer = document.createElement("div");
   createTodoContainer.classList.add("create-todo-container");
   content.appendChild(createTodoContainer);
+
+  let createTodoIsOpen = false;
 
   addTodoContainer.addEventListener("click", () => {
     if (createTodoIsOpen) {
@@ -344,6 +343,7 @@ function renderCreateTodo(projName) {
       return;
     }
 
+    console.log(projectSelection.value);
     const newTodo = createTodo(
       titleInput.value,
       descriptionTextarea.value,
@@ -353,11 +353,12 @@ function renderCreateTodo(projName) {
       projectSelection.value
     );
     addTodoToProject(projectSelection.value, newTodo);
-    if (projectName == "_home") allTodos();
-    if (projectName == "_today") todaysTodos();
-    if (projectName == "_week") thisWeeksTodos();
-    if (projectName == "_month") thisMonthsTodos();
+    if (projName == "_home") allTodos();
+    if (projName == "_today") todaysTodos();
+    if (projName == "_week") thisWeeksTodos();
+    if (projName == "_month") thisMonthsTodos();
     renderProjectContent(projName);
+    createTodoIsOpen = false;
   }
 
   addTodoButton.addEventListener("click", addTodo);
@@ -399,8 +400,25 @@ function renderTodo(projectName, todo) {
 
   const description = document.createElement("p");
   description.classList.add("description-text");
+  description.classList.add("description-is-closed");
   description.innerText = todo.description;
   descriptionContainer.appendChild(description);
+
+  let todoIsOpen = false;
+  let editTodoIsOpen = false;
+
+  titleDescriptionContainer.addEventListener("click", () => {
+    if (editTodoIsOpen) return;
+    if (todoIsOpen) {
+      todoContainer.style.height = "4rem";
+      description.classList.add("description-is-closed");
+      todoIsOpen = false;
+    } else {
+      todoContainer.style.height = "fit-content";
+      description.classList.remove("description-is-closed");
+      todoIsOpen = true;
+    }
+  });
 
   const todoProjectContainer = document.createElement("div");
   todoProjectContainer.classList.add("todo-project-container");
@@ -459,7 +477,7 @@ function renderTodo(projectName, todo) {
   }
 
   statusCheckBox.addEventListener("click", () => {
-    changeTodoStatus(projectName, todo.title);
+    changeTodoStatus(todo.project, todo.title);
     renderProjectContent(projectName);
   });
 
@@ -734,6 +752,8 @@ function renderTodo(projectName, todo) {
         editedTodo
       );
       editTodoIsOpen = false;
+      todoContainer.style.height = "4rem";
+      description.classList.add("description-is-closed");
       if (projectName == "_home") allTodos();
       if (projectName == "_today") todaysTodos();
       if (projectName == "_week") thisWeeksTodos();
@@ -744,6 +764,8 @@ function renderTodo(projectName, todo) {
     editTodoButton.addEventListener("click", editTodoButtonPress);
     cancelButton.addEventListener("click", () => {
       editTodoFormContainer.textContent = "";
+      todoContainer.style.height = "4rem";
+      description.classList.add("description-is-closed");
       editTodoIsOpen = false;
     });
   }
@@ -752,10 +774,14 @@ function renderTodo(projectName, todo) {
     if (editTodoIsOpen) {
       editTodoFormContainer.textContent = "";
       editTodoIsOpen = false;
+      todoContainer.style.height = "4rem";
+      description.classList.add("description-is-closed");
       return;
     }
 
     editTodoIsOpen = true;
+    todoContainer.style.height = "fit-content";
+    description.classList.add("description-is-closed");
     editTodoForm();
   });
 
@@ -788,7 +814,7 @@ function renderTodo(projectName, todo) {
 
     verifyDeleteButton.addEventListener("click", () => {
       const contentContainer = document.querySelector(".content-container");
-      deleteTodoFromProject(projectName, todo.title);
+      deleteTodoFromProject(todo.project, todo.title);
       contentContainer.removeChild(todoContainer);
     });
 

@@ -9,6 +9,7 @@ import {
 } from "./projects";
 import { renderProjectContent } from "./renderContent";
 
+const nav = document.querySelector("#nav");
 const projectNav = document.querySelector("#projectNav");
 
 // ADD PROJECTS:
@@ -109,11 +110,20 @@ function renderProject(projName) {
   projectNavElement.innerText = "";
   projectNav.appendChild(projectNavElement);
 
+  const projectNameContainer = document.createElement("div");
+  projectNameContainer.classList.add("nav-project-name-container");
+  projectNavElement.appendChild(projectNameContainer);
+
   const projectName = document.createElement("p");
   projectName.innerText = projName;
-  projectNavElement.appendChild(projectName);
+  projectNameContainer.appendChild(projectName);
 
   projectName.addEventListener("click", () => {
+    const liElements = nav.querySelectorAll("li");
+    liElements.forEach((element) => {
+      element.classList.remove("selected-project");
+    });
+    projectNavElement.classList.add("selected-project");
     renderProjectContent(projectName.innerText);
   });
 
@@ -269,6 +279,11 @@ function renderProject(projName) {
 const home = document.querySelector("#home");
 
 home.addEventListener("click", () => {
+  const liElements = nav.querySelectorAll("li");
+  liElements.forEach((element) => {
+    element.classList.remove("selected-project");
+  });
+  home.classList.add("selected-project");
   allTodos();
   renderProjectContent("_home");
 });
@@ -276,6 +291,11 @@ home.addEventListener("click", () => {
 const today = document.querySelector("#today");
 
 today.addEventListener("click", () => {
+  const liElements = nav.querySelectorAll("li");
+  liElements.forEach((element) => {
+    element.classList.remove("selected-project");
+  });
+  today.classList.add("selected-project");
   todaysTodos();
   renderProjectContent("_today");
 });
@@ -283,6 +303,11 @@ today.addEventListener("click", () => {
 const week = document.querySelector("#week");
 
 week.addEventListener("click", () => {
+  const liElements = nav.querySelectorAll("li");
+  liElements.forEach((element) => {
+    element.classList.remove("selected-project");
+  });
+  week.classList.add("selected-project");
   thisWeeksTodos();
   renderProjectContent("_week");
 });
@@ -290,6 +315,11 @@ week.addEventListener("click", () => {
 const month = document.querySelector("#month");
 
 month.addEventListener("click", () => {
+  const liElements = nav.querySelectorAll("li");
+  liElements.forEach((element) => {
+    element.classList.remove("selected-project");
+  });
+  month.classList.add("selected-project");
   thisMonthsTodos();
   renderProjectContent("_month");
 });

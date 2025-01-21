@@ -114,6 +114,7 @@ nav ul {
   flex-direction: column;
 
   height: 50%;
+  padding-left: 20px;
   list-style: none;
 }
 
@@ -128,29 +129,35 @@ nav ul:first-child {
 nav p {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   user-select: none;
 }
 
-nav span {
+#addProject {
   position: relative;
-  margin-right: 20px;
+  font-size: 2rem;
+  background: var(--light-bg-color);
+  padding: 0 1rem;
+  border-radius: 100%;
+  margin-right: 30px;
   cursor: pointer;
 }
 
-nav > span:hover::before {
-  content: "Add project";
+#addProject:hover::before {
+  content: "Add Project";
+  font-size: 1rem;
   white-space: nowrap;
 
   position: absolute;
-  top: -20px;
-  left: -40px;
+  top: -30px;
+  left: -10px;
 }
 
 .project-nav {
   gap: 10px;
 
   padding-top: 20px;
-  padding-left: 20px;
+
   overflow-y: auto;
 }
 
@@ -161,6 +168,21 @@ nav > span:hover::before {
 
   position: relative;
   cursor: pointer;
+}
+
+.nav-project-name-container {
+  width: 75%;
+}
+
+.project-nav-element p,
+nav ul:first-child li {
+  display: inline-block;
+  transition-duration: 200ms;
+}
+
+nav ul:first-child li.selected-project,
+li.selected-project p {
+  margin-left: 20px;
 }
 
 .input-container,
@@ -252,18 +274,10 @@ nav > span:hover::before {
   white-space: nowrap;
 }
 
-.project-nav-element p {
-  display: inline-block;
-  transition-duration: 250ms;
-}
-
-.project-nav-element p:hover {
-  margin-left: 10px;
-}
-
 .project-options-container {
-  display: inline-block;
-  width: 30%;
+  display: flex;
+  gap: 30px;
+  width: 25%;
   position: relative;
 }
 
@@ -426,21 +440,29 @@ nav > span:hover::before {
 }
 
 .content-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 20px;
   overflow-y: auto;
+  height: 100%;
 }
 
 .todo-container {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
 
   width: 100%;
+  height: 4rem;
 }
 
 .todo-content-container {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   gap: 20px;
+
   padding: 10px 20px;
   width: 100%;
 }
@@ -450,8 +472,31 @@ nav > span:hover::before {
   color: var(--light-bg-color);
 }
 
+.status-container {
+  padding-top: 5px;
+}
+
 .title-description-container {
+  display: flex;
+  flex-direction: column;
   width: 30%;
+  max-width: 30%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.description-container {
+  max-height: 50%;
+
+  overflow: hidden;
+  padding-right: 20px;
+}
+
+.description-is-closed {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .todo-project-container {
@@ -468,7 +513,7 @@ nav > span:hover::before {
 .right-side-todo-container {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   gap: 40px;
   width: 50%;
 }
