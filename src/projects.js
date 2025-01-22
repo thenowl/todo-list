@@ -18,9 +18,9 @@ function initProjects() {
     "Starter Project",
     createTodo(
       "Example Todo",
-      "Click me to reveal the rest of my content.\nAs you can see, you can unfold Todos to show longer descriptions.",
+      "Click me to reveal the rest of my content.\n\nAs you can see, you can unfold Todos to show longer descriptions.\n\nWhen you have finished a task, you can check it off with the checkbox to the left.\n\nYou can also edit any task to change its content or assign it to a different project.\n\nTasks can be marked as completed or modified from both, the project page as well as the Home, Today, Week and Month pages.",
       new Date().toISOString().split("T")[0],
-      2,
+      1,
       "todo",
       "Starter Project"
     )
@@ -104,7 +104,6 @@ function thisWeeksTodos() {
 }
 
 function thisMonthsTodos() {
-  console.log("yay");
   projectsContainer["_month"].projectItems = {};
   for (const project of Object.keys(projectsContainer)) {
     if (

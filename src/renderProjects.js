@@ -49,7 +49,13 @@ function renderAddProjectMenu() {
   navButtonContainer.appendChild(cancelButton);
 
   function addProjectButton() {
-    if (!projectNameInput.value) {
+    if (
+      !projectNameInput.value ||
+      projectNameInput.value == "_home" ||
+      projectNameInput.value == "_today" ||
+      projectNameInput.value == "_week" ||
+      projectNameInput.value == "_month"
+    ) {
       const titleRequestContainer = document.createElement("dialog");
       titleRequestContainer.classList.add("title-request-container");
       inputContainer.appendChild(titleRequestContainer);
@@ -57,7 +63,12 @@ function renderAddProjectMenu() {
 
       const warning = document.createElement("h2");
       warning.classList.add("warning-message");
-      warning.innerText = "Please enter a title for your project";
+      if (!projectNameInput.value) {
+        warning.innerText = "Please enter a title for your project";
+      } else {
+        warning.innerText =
+          "This project name is reserved by the app and cannot be used.";
+      }
       titleRequestContainer.appendChild(warning);
 
       const titleRequestButtonContainer = document.createElement("div");
@@ -144,7 +155,7 @@ function renderProject(projName) {
   // EDIT PROJECT NAME:
 
   editProjectNameSymbol.addEventListener("click", () => {
-    projectNavElement.removeChild(projectName);
+    projectNavElement.removeChild(projectNameContainer);
     projectNavElement.removeChild(optionsContainer);
 
     const renameProjectContainer = document.createElement("div");
@@ -174,17 +185,55 @@ function renderProject(projName) {
     renameProjectButtonContainer.appendChild(cancelButton);
 
     renameButton.addEventListener("click", () => {
+      if (
+        !renameProjectInput.value ||
+        renameProjectInput.value == "_home" ||
+        renameProjectInput.value == "_today" ||
+        renameProjectInput.value == "_week" ||
+        renameProjectInput.value == "_month"
+      ) {
+        const titleRequestContainer = document.createElement("dialog");
+        titleRequestContainer.classList.add("title-request-container");
+        renameProjectContainer.appendChild(titleRequestContainer);
+        titleRequestContainer.showModal();
+
+        const warning = document.createElement("h2");
+        warning.classList.add("warning-message");
+        if (!renameProjectInput.value) {
+          warning.innerText = "Please enter a title for your project";
+        } else {
+          warning.innerText =
+            "This project name is reserved by the app and cannot be used.";
+        }
+        titleRequestContainer.appendChild(warning);
+
+        const titleRequestButtonContainer = document.createElement("div");
+        titleRequestButtonContainer.classList.add(
+          "title-request-button-container"
+        );
+        titleRequestContainer.appendChild(titleRequestButtonContainer);
+
+        const titleRequestButton = document.createElement("button");
+        titleRequestButton.classList.add("ok-button");
+        titleRequestButton.type = "button";
+        titleRequestButton.innerText = "OK";
+        titleRequestButtonContainer.appendChild(titleRequestButton);
+
+        titleRequestButton.addEventListener("click", () => {
+          titleRequestContainer.close();
+        });
+        return;
+      }
       projectNavElement.removeChild(renameProjectContainer);
       projectName.innerText = renameProjectInput.value;
       renameProject(projName, renameProjectInput.value);
-      projectNavElement.appendChild(projectName);
-      projectNavElement.appendChild(optionsContainer);
+      renderProject(renameProjectInput.value);
       renderProjectContent(renameProjectInput.value);
     });
 
     cancelButton.addEventListener("click", () => {
       projectNavElement.removeChild(renameProjectContainer);
-      projectNavElement.appendChild(projectName);
+      projectNavElement.appendChild(projectNameContainer);
       projectNavElement.appendChild(optionsContainer);
     });
   });
@@ -192,85 +241,45 @@ function renderProject(projName) {
   // DELETE PROJECT:
 
   deleteProjectSymbol.addEventListener("click", () => {
-    projectNavElement.removeChild(optionsContainer);
-    const deleteButtonLineBreaker = document.createElement("div");
-    deleteButtonLineBreaker.classList.add("delete-button-line-breaker");
-    projectNavElement.appendChild(deleteButtonLineBreaker);
+    const verifyDeleteContainer = document.createElement("dialog");
+    verifyDeleteContainer.classList.add("verify-delete-container");
+    projectNavElement.appendChild(verifyDeleteContainer);
+    verifyDeleteContainer.showModal();
 
-    const deleteProjectContainer = document.createElement("div");
-    deleteProjectContainer.classList.add("delete-project-container");
-    projectNavElement.appendChild(deleteProjectContainer);
+    const warning = document.createElement("h2");
+    warning.classList.add("warning-message");
+    warning.innerText = "Are you sure you wish to delete the project?";
+    verifyDeleteContainer.appendChild(warning);
 
-    const deleteProjectButtonContainer = document.createElement("div");
-    deleteProjectButtonContainer.classList.add(
+    const warningAddOn = document.createElement("h3");
+    warningAddOn.classList.add("warning-message");
+    warningAddOn.innerText = "This will delete the project and all its tasks!";
+    verifyDeleteContainer.appendChild(warningAddOn);
+
+    const verifyDeleteProjectButtonContainer = document.createElement("div");
+    verifyDeleteProjectButtonContainer.classList.add(
       "delete-project-button-container"
     );
-    deleteProjectContainer.appendChild(deleteProjectButtonContainer);
+    verifyDeleteContainer.appendChild(verifyDeleteProjectButtonContainer);
 
-    const deleteButton = document.createElement("button");
-    deleteButton.classList.add("delete-button");
-    deleteButton.innerText = "Delete";
-    deleteProjectButtonContainer.appendChild(deleteButton);
+    const verifyDeleteButton = document.createElement("button");
+    verifyDeleteButton.classList.add("delete-button");
+    verifyDeleteButton.innerText = "Delete";
+    verifyDeleteProjectButtonContainer.appendChild(verifyDeleteButton);
 
-    const cancelButton = document.createElement("button");
-    cancelButton.classList.add("cancel-button");
-    cancelButton.innerText = "Cancel";
-    deleteProjectButtonContainer.appendChild(cancelButton);
+    const verifyCancelButton = document.createElement("button");
+    verifyCancelButton.classList.add("cancel-button");
+    verifyCancelButton.innerText = "Cancel";
+    verifyDeleteProjectButtonContainer.appendChild(verifyCancelButton);
 
-    // VERIFY DELETE PROJECT:
-
-    deleteButton.addEventListener("click", () => {
-      const verifyDeleteContainer = document.createElement("dialog");
-      verifyDeleteContainer.classList.add("verify-delete-container");
-      projectNavElement.appendChild(verifyDeleteContainer);
-      verifyDeleteContainer.showModal();
-
-      const warning = document.createElement("h2");
-      warning.classList.add("warning-message");
-      warning.innerText = "Are you sure you wish to delete the project?";
-      verifyDeleteContainer.appendChild(warning);
-
-      const warningAddOn = document.createElement("h3");
-      warningAddOn.classList.add("warning-message");
-      warningAddOn.innerText =
-        "This will delete the project and all its tasks!";
-      verifyDeleteContainer.appendChild(warningAddOn);
-
-      const verifyDeleteProjectButtonContainer = document.createElement("div");
-      verifyDeleteProjectButtonContainer.classList.add(
-        "delete-project-button-container"
-      );
-      verifyDeleteContainer.appendChild(verifyDeleteProjectButtonContainer);
-
-      const verifyDeleteButton = document.createElement("button");
-      verifyDeleteButton.classList.add("delete-button");
-      verifyDeleteButton.innerText = "Delete";
-      verifyDeleteProjectButtonContainer.appendChild(verifyDeleteButton);
-
-      const verifyCancelButton = document.createElement("button");
-      verifyCancelButton.classList.add("cancel-button");
-      verifyCancelButton.innerText = "Cancel";
-      verifyDeleteProjectButtonContainer.appendChild(verifyCancelButton);
-
-      verifyDeleteButton.addEventListener("click", () => {
-        deleteProject(projName);
-        projectNav.removeChild(projectNavElement);
-        projectNavElement.removeChild(verifyDeleteContainer);
-      });
-
-      verifyCancelButton.addEventListener("click", () => {
-        projectNavElement.removeChild(deleteButtonLineBreaker);
-        projectNavElement.removeChild(deleteProjectContainer);
-        projectNavElement.removeChild(verifyDeleteContainer);
-        projectNavElement.appendChild(optionsContainer);
-      });
+    verifyDeleteButton.addEventListener("click", () => {
+      deleteProject(projName);
+      projectNav.removeChild(projectNavElement);
+      projectNavElement.removeChild(verifyDeleteContainer);
     });
 
-    // CANCEL DELETE PROJECT:
-
-    cancelButton.addEventListener("click", () => {
-      projectNavElement.removeChild(deleteButtonLineBreaker);
-      projectNavElement.removeChild(deleteProjectContainer);
+    verifyCancelButton.addEventListener("click", () => {
+      projectNavElement.removeChild(verifyDeleteContainer);
       projectNavElement.appendChild(optionsContainer);
     });
   });
@@ -322,6 +331,19 @@ month.addEventListener("click", () => {
   month.classList.add("selected-project");
   thisMonthsTodos();
   renderProjectContent("_month");
+});
+
+const burgerMenu = document.querySelector("#burgerMenu");
+let navIsOpen = false;
+
+burgerMenu.addEventListener("click", () => {
+  if (navIsOpen) {
+    navIsOpen = false;
+    nav.classList.remove("unhide");
+    return;
+  }
+  navIsOpen = true;
+  nav.classList.add("unhide");
 });
 
 export { renderProject };

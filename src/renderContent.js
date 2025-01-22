@@ -32,7 +32,15 @@ function renderProjectContent(projName) {
   content.appendChild(projectNameContainer);
 
   const projectName = document.createElement("h2");
-  projectName.textContent = projName;
+  projName == "_home"
+    ? (projectName.textContent = "All tasks")
+    : projName == "_today"
+    ? (projectName.textContent = "Todays tasks")
+    : projName == "_week"
+    ? (projectName.textContent = "This week's tasks")
+    : projName == "_month"
+    ? (projectName.textContent = "This month's tasks")
+    : (projectName.textContent = projName);
   projectNameContainer.appendChild(projectName);
 
   const sortContainer = document.createElement("div");
@@ -343,7 +351,6 @@ function renderCreateTodo(projName) {
       return;
     }
 
-    console.log(projectSelection.value);
     const newTodo = createTodo(
       titleInput.value,
       descriptionTextarea.value,
@@ -357,6 +364,16 @@ function renderCreateTodo(projName) {
     if (projName == "_today") todaysTodos();
     if (projName == "_week") thisWeeksTodos();
     if (projName == "_month") thisMonthsTodos();
+
+    if (getProject(projName).sortBy == "alphabet") {
+      sortByAlphabet(projName);
+    }
+    if (getProject(projName).sortBy == "priority") {
+      sortByPriority(projName);
+    }
+    if (getProject(projName).sortBy == "dueDate") {
+      sortByDueDate(projName);
+    }
     renderProjectContent(projName);
     createTodoIsOpen = false;
   }
@@ -759,6 +776,15 @@ function renderTodo(projectName, todo) {
       if (projectName == "_today") todaysTodos();
       if (projectName == "_week") thisWeeksTodos();
       if (projectName == "_month") thisMonthsTodos();
+      if (getProject(projectName).sortBy == "alphabet") {
+        sortByAlphabet(projectName);
+      }
+      if (getProject(projectName).sortBy == "priority") {
+        sortByPriority(projectName);
+      }
+      if (getProject(projectName).sortBy == "dueDate") {
+        sortByDueDate(projectName);
+      }
       renderProjectContent(projectName);
     }
 
